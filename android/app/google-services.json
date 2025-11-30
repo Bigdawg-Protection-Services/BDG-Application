@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "141482645174",
+    "project_id": "bdg-appstation",
+    "storage_bucket": "bdg-appstation.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:141482645174:android:1138c9dc27662318b9b817",
+        "android_client_info": {
+          "package_name": "com.bdg"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmVZVW5dRAoJ8qBQrpriry6nG-AwmcwdY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
