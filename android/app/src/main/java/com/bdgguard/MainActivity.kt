@@ -1,4 +1,5 @@
-package com.bdg
+package com.bdgguard
+
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

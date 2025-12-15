@@ -1,4 +1,5 @@
-package com.bdg
+package com.bdgguard
+
 
 import android.app.Application
 import com.facebook.react.PackageList

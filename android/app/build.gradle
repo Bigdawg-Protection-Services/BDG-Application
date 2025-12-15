@@ -81,12 +81,12 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.bdg"
+    namespace "com.bdgguard"
     defaultConfig {
-        applicationId "com.bdg"
+        applicationId "com.bdgguard"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 17
+        versionCode 24
         versionName "3.6"
     }
     signingConfigs {

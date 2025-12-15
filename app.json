@@ -1,6 +1,19 @@
 {
   "name": "bdg",
   "displayName": "bdg",
+
+  "ios": {
+    "bundleIdentifier": "com.bdgguard",
+    "buildNumber": "24"
+  },
+
+  "android": {
+    "package": "com.bdgguard",
+    "versionCode": 24,
+    "compileSdkVersion": 35,
+    "targetSdkVersion": 35
+  },
+
   "extra": {
     "eas": {
       "projectId": "9b162888-deed-4315-950d-c955c92b54cb"

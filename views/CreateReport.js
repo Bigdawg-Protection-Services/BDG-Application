@@ -182,9 +182,22 @@ class CreateReport extends Component {
             token = await AsyncStorage.getItem('@loginToken')
         } catch(e) { console.log('Token reading error ...',e) }
 
+        // Helper function to detect MIME type from filename
+        const getMimeType = (filename) => {
+            const ext = filename.toLowerCase().split('.').pop();
+            const mimeTypes = {
+                'jpg': 'image/jpeg',
+                'jpeg': 'image/jpeg',
+                'png': 'image/png',
+                'gif': 'image/gif',
+                'webp': 'image/webp'
+            };
+            return mimeTypes[ext] || 'image/jpeg'; // default to jpeg
+        };
+
             let i = {
                 uri: path,
-                type: 'multipart/form-data',
+            type: getMimeType(filename), // Fixed: Use proper MIME type instead of 'multipart/form-data'
                 name: filename
             };
             
@@ -194,8 +207,8 @@ class CreateReport extends Component {
             let url1 = URL.concat('api/firebase')
             axios.post(url1, fData, {
                 headers: {
-                    'Authorization': 'Bearer '.concat(token),
-                    'Content-Type': 'multipart/form-data; '
+                'Authorization': 'Bearer '.concat(token)
+                // Fixed: Removed Content-Type header - let axios/React Native set it automatically with boundary
                 }
             }) 
             .then(response => {
@@ -215,8 +228,13 @@ class CreateReport extends Component {
             })
             .catch(error => {
                 console.log('Image upload error : ',error); 
-                Toast.show('Image uploaded',Toast.LONG)
-                this.setState({loaderVisible: false, imgArr: this.state.imgArr.pop() })
+            Toast.show('Image upload failed',Toast.LONG) // Fixed: Changed error message
+            // Fixed: Properly remove last item from array
+            let newImgArr = [...this.state.imgArr];
+            if (newImgArr.length > 0) {
+                newImgArr.pop();
+            }
+            this.setState({loaderVisible: false, imgArr: newImgArr })
             })
     }
     async sendReport(){
