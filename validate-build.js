@@ -79,11 +79,13 @@ console.log('3. Checking app.json...');
 try {
   const appJson = JSON.parse(fs.readFileSync('app.json', 'utf8'));
   
-  if (!appJson.ios?.bundleIdentifier) {
+  const expoConfig = appJson.expo || appJson;
+
+  if (!expoConfig.ios?.bundleIdentifier) {
     errors.push('app.json: Missing ios.bundleIdentifier');
   }
   
-  if (appJson.ios?.bundleIdentifier !== 'com.bdgguard') {
+  if (expoConfig.ios?.bundleIdentifier !== 'com.bdgguard') {
     warnings.push('app.json: Bundle identifier should be com.bdgguard for consistency');
   }
   

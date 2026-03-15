@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   ActivityIndicator,
   View,
@@ -18,7 +18,11 @@ const axios = require('axios').default;
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import URL from '../res/data/Environment';
-var moment = require('moment');
+import dayjs from 'dayjs';
+import 'dayjs/locale/en';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+dayjs.extend(localizedFormat);
+dayjs.locale('en');
 import Ripple from 'react-native-material-ripple';
 import IconEntypo from 'react-native-vector-icons/Entypo';
 
@@ -52,13 +56,13 @@ class ShiftView extends Component {
     }
   };
   getUserShifts(id, token) {
-    //let ds1 = moment().format('YYYY-MM-DD')
-    let ds1 = moment().subtract(6, 'M').format('YYYY-MM-DD');
-    // console.log('Date from date is : ',ds1,' : ',moment())
-    let ds2 = moment().add(1, 'y').format('YYYY-12-31');
-    // console.log('Date to date is : ',ds2,' : ',moment().add(1, 'y'))
+    //let ds1 = dayjs().format('YYYY-MM-DD')
+    let ds1 = dayjs().subtract(6, 'month').format('YYYY-MM-DD');
+    // console.log('Date from date is : ',ds1,' : ',dayjs())
+    let ds2 = dayjs().add(1, 'year').format('YYYY-12-31');
+    // console.log('Date to date is : ',ds2,' : ',dayjs().add(1, 'year'))
 
-    this.setState({loaderVisible: true});
+    this.setState({ loaderVisible: true });
     let url = URL.concat('api/user-shifts/').concat(id);
     axios
       .post(
@@ -87,7 +91,7 @@ class ShiftView extends Component {
       })
       .catch(error => {
         console.log('Get user shits error : ', error);
-        this.setState({loaderVisible: false});
+        this.setState({ loaderVisible: false });
       });
   }
   getUserShiftsCompleted(shiftsArray) {
@@ -106,9 +110,9 @@ class ShiftView extends Component {
       shiftArrrayCompleted: completedArray,
     });
 
-    // let ds1 = moment().format('YYYY-01-01')
+    // let ds1 = dayjs().format('YYYY-01-01')
     // console.log('CompletedDate from date is : ',ds1)
-    // let ds2 = moment().add(1,'days').format('YYYY-MM-DD')
+    // let ds2 = dayjs().add(1,'days').format('YYYY-MM-DD')
     // console.log('CompletedDate from date is : ',ds2)
 
     // this.setState({loaderVisible: true })
@@ -162,16 +166,16 @@ class ShiftView extends Component {
           }}
           colors={['#2c3e50', '#4ca1af']}></LinearGradient>
         {Platform.OS == 'ios' && (
-          <View style={{marginTop: screenHeight * 0.05}} />
+          <View style={{ marginTop: screenHeight * 0.05 }} />
         )}
         {Platform.OS === 'android' && (
-          <View style={{height: screenHeight * 0.03}} />
+          <View style={{ height: screenHeight * 0.03 }} />
         )}
         <TouchableOpacity
           onPress={() => {
             this.props.navigation.goBack();
           }}
-          style={{marginTop: 20, marginLeft: 25, zIndex: 5}}>
+          style={{ marginTop: 20, marginLeft: 25, zIndex: 5 }}>
           <IconEntypo name="chevron-thin-left" color="white" size={24} />
         </TouchableOpacity>
 
@@ -247,9 +251,9 @@ class ShiftView extends Component {
           </View>
         </View>
         <ScrollView
-          style={{backgroundColor: 'white', height: screenHeight * 0.82}}>
+          style={{ backgroundColor: 'white', height: screenHeight * 0.82 }}>
           {this.state.tab1Select && (
-            <View style={{padding: 24}}>
+            <View style={{ padding: 24 }}>
               {this.state.shiftArray.length > 0 ? (
                 this.state.shiftArray.map((shift, index) => {
                   if (this.state.curDate < new Date(shift.to)) {
@@ -264,10 +268,10 @@ class ShiftView extends Component {
                           borderRadius: 8,
                           marginBottom: 12,
                         }}>
-                        <Text style={{color: 'black', fontSize: 18}}>
+                        <Text style={{ color: 'black', fontSize: 18 }}>
                           {shift.name}
                         </Text>
-                        <Text style={{color: 'black', marginTop: 8}}>
+                        <Text style={{ color: 'black', marginTop: 8 }}>
                           {shift?.site?.location}
                         </Text>
                         <View
@@ -276,9 +280,9 @@ class ShiftView extends Component {
                             flexDirection: 'row',
                             alignItems: 'center',
                           }}>
-                          <Text style={{width: 60}}>From</Text>
-                          <Text style={{color: 'black'}}>
-                            {moment(shift.from).format('LL - LT')}
+                          <Text style={{ width: 60 }}>From</Text>
+                          <Text style={{ color: 'black' }}>
+                            {dayjs(shift.from).format('LL - LT')}
                           </Text>
                         </View>
                         <View
@@ -287,9 +291,9 @@ class ShiftView extends Component {
                             flexDirection: 'row',
                             alignItems: 'center',
                           }}>
-                          <Text style={{width: 60}}>To</Text>
-                          <Text style={{color: 'black'}}>
-                            {moment(shift.to).format('LL - LT')}
+                          <Text style={{ width: 60 }}>To</Text>
+                          <Text style={{ color: 'black' }}>
+                            {dayjs(shift.to).format('LL - LT')}
                           </Text>
                         </View>
                         {this.state.curDate > new Date(shift.from) &&
@@ -353,7 +357,7 @@ class ShiftView extends Component {
                     alignItems: 'center',
                   }}>
                   <Text
-                    style={{fontSize: 24, color: 'grey', textAlign: 'center'}}>
+                    style={{ fontSize: 24, color: 'grey', textAlign: 'center' }}>
                     No records
                   </Text>
                 </View>
@@ -361,7 +365,7 @@ class ShiftView extends Component {
             </View>
           )}
           {!this.state.tab1Select && (
-            <View style={{padding: 24}}>
+            <View style={{ padding: 24 }}>
               {this.state.shiftArrrayCompleted.length > 0 ? (
                 this.state.shiftArrrayCompleted.map((shift, index) => {
                   return (
@@ -376,10 +380,10 @@ class ShiftView extends Component {
                         marginBottom: 12,
                         elevation: 5,
                       }}>
-                      <Text style={{color: 'black', fontSize: 18}}>
+                      <Text style={{ color: 'black', fontSize: 18 }}>
                         {shift.name}
                       </Text>
-                      <Text style={{color: 'black', marginTop: 8}}>
+                      <Text style={{ color: 'black', marginTop: 8 }}>
                         {shift?.site?.location}
                       </Text>
 
@@ -389,9 +393,9 @@ class ShiftView extends Component {
                           flexDirection: 'row',
                           alignItems: 'center',
                         }}>
-                        <Text style={{width: 60}}>From</Text>
-                        <Text style={{color: 'black'}}>
-                          {moment(shift.from).format('LL - LT')}
+                        <Text style={{ width: 60 }}>From</Text>
+                        <Text style={{ color: 'black' }}>
+                          {dayjs(shift.from).format('LL - LT')}
                         </Text>
                       </View>
                       <View
@@ -400,9 +404,9 @@ class ShiftView extends Component {
                           flexDirection: 'row',
                           alignItems: 'center',
                         }}>
-                        <Text style={{width: 60}}>To</Text>
-                        <Text style={{color: 'black'}}>
-                          {moment(shift.to).format('LL - LT')}
+                        <Text style={{ width: 60 }}>To</Text>
+                        <Text style={{ color: 'black' }}>
+                          {dayjs(shift.to).format('LL - LT')}
                         </Text>
                       </View>
                       <Text
@@ -441,14 +445,14 @@ class ShiftView extends Component {
                     alignItems: 'center',
                   }}>
                   <Text
-                    style={{fontSize: 24, color: 'grey', textAlign: 'center'}}>
+                    style={{ fontSize: 24, color: 'grey', textAlign: 'center' }}>
                     No records
                   </Text>
                 </View>
               )}
             </View>
           )}
-          <View style={{height: screenHeight * 0.1}}></View>
+          <View style={{ height: screenHeight * 0.1 }}></View>
         </ScrollView>
 
         {/* </SafeAreaView> */}

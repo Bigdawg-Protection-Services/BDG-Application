@@ -1,3 +1,4 @@
+require File.join(File.dirname(`node --print "require.resolve('expo/package.json')"`), "scripts/autolinking")
 # Resolve react_native_pods.rb with node to allow for hoisting
 require Pod::Executable.execute_command('node', ['-p',
   'require.resolve(
@@ -5,30 +6,41 @@ require Pod::Executable.execute_command('node', ['-p',
     {paths: [process.argv[1]]},
   )', __dir__]).strip
 
-platform :ios, min_ios_version_supported
+platform :ios, '15.1'
 prepare_react_native_project!
 
-# Use static frameworks for Firebase Swift pods compatibility
-# This is required for Firebase Storage Swift header to work
+# Force old architecture to avoid TurboModules/Fabric startup crashes.
+ENV['RCT_NEW_ARCH_ENABLED'] = '0'
+
+# RNFirebase recommends static frameworks on iOS.
+$RNFirebaseAsStaticFramework = true
 use_frameworks! :linkage => :static
 
 target 'bdg' do
-  config = use_native_modules!
+  use_expo_modules!
+
+  if ENV['EXPO_USE_COMMUNITY_AUTOLINKING'] == '1'
+    config_command = ['node', '-e', "process.argv=['', '', 'config'];require('@react-native-community/cli').run()"];
+  else
+    config_command = [
+      'node',
+      '--no-warnings',
+      '--eval',
+      'require(require.resolve(\'expo-modules-autolinking\', { paths: [require.resolve(\'expo/package.json\')] }))(process.argv.slice(1))',
+      'react-native-config',
+      '--json',
+      '--platform',
+      'ios'
+    ]
+  end
+
+  config = use_native_modules!(config_command)
 
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
-
-  # Enable modular headers for Firebase dependencies
-  pod 'GoogleUtilities', :modular_headers => true
-  pod 'FirebaseCore', :modular_headers => true
-  pod 'FirebaseCoreExtension', :modular_headers => true
-  pod 'FirebaseAppCheckInterop', :modular_headers => true
-  pod 'FirebaseAuthInterop', :modular_headers => true
-  pod 'FirebaseCoreInternal', :modular_headers => true
-  pod 'FirebaseStorage', :modular_headers => true
 
   target 'bdgTests' do
     inherit! :complete
@@ -43,28 +55,5 @@ target 'bdg' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
-    
-    # Fix for Firebase Swift pods with static libraries
-    installer.pods_project.targets.each do |target|
-      if target.name.include?('Firebase') || target.name.include?('GoogleUtilities')
-        target.build_configurations.each do |config|
-          config.build_settings['DEFINES_MODULE'] = 'YES'
-          config.build_settings['SWIFT_VERSION'] = '5.0'
-          # Ensure Swift module map is generated
-          config.build_settings['CLANG_ENABLE_MODULES'] = 'YES'
-        end
-      end
-      
-      # Fix for RNFBStorage Swift header issue
-      if target.name == 'RNFBStorage'
-        target.build_configurations.each do |config|
-          config.build_settings['DEFINES_MODULE'] = 'YES'
-          config.build_settings['SWIFT_VERSION'] = '5.0'
-          config.build_settings['CLANG_ENABLE_MODULES'] = 'YES'
-          # Ensure Swift bridging header is generated
-          config.build_settings['SWIFT_OBJC_BRIDGING_HEADER'] = ''
-        end
-      end
-    end
   end
 end

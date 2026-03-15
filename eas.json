@@ -9,7 +9,12 @@
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "ios": {
+        "cache": {
+          "disabled": true
+        }
+      }
     },
     "production": {
       "autoIncrement": true,

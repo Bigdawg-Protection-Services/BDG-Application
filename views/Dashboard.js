@@ -57,8 +57,7 @@ class Dashboard extends Component {
       todayDate: dd,
     });
 
-    this.checkCameraPermission();
-    this.hasLocationPermission();
+    // Defer permission prompts until user initiates camera/timestamp flows.
   }
   async readSavedData() {
     try {
@@ -377,8 +376,8 @@ class Dashboard extends Component {
               }}>
               <TouchableOpacity
                 onPress={() => {
-                  //this.checkCameraPermission()
-                  //this.hasLocationPermission()
+                  this.checkCameraPermission();
+                  this.hasLocationPermission();
                   this.props.navigation.navigate('CameraView');
                 }}
                 style={{
