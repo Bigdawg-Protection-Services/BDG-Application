@@ -58,6 +58,9 @@
       "@react-native-community/datetimepicker",
       "expo-asset"
     ],
+    "experiments": {
+      "newArchEnabled": false
+    },
     "extra": {
       "eas": {
         "projectId": "9b162888-deed-4315-950d-c955c92b54cb"
