@@ -7,11 +7,11 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "node": "20.11.1"
+      "node": "20.17.0"
     },
     "preview": {
       "distribution": "internal",
-      "node": "20.11.1",
+      "node": "20.17.0",
       "ios": {
         "cache": {
           "disabled": true
@@ -20,7 +20,7 @@
     },
     "production": {
       "autoIncrement": true,
-      "node": "20.11.1",
+      "node": "20.17.0",
       "ios": {
         "buildConfiguration": "Release",
         "cache": {
